@@ -35,4 +35,17 @@ public class ProductServiceTest extends UnitTest {
 
     verify(productRepositoryMock).searchProducts(productName);
   }
+
+  @Test
+  @DisplayName("Should get product by product id")
+  public void getProduct() {
+    // given
+    String productId = "sample-product-1D";
+
+    // when
+    productService.getProduct(productId);
+
+    // then
+    verify(productRepositoryMock).findById(productId);
+  }
 }
