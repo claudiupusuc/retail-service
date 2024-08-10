@@ -1,6 +1,7 @@
 package app.cart.rest;
 
 import app.cart.CartOperations;
+import app.cart.dao.Cart;
 import app.exception.ex.BadRequestException;
 import app.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,18 @@ public class CartController {
     this.validator = validator;
   }
 
-  @PostMapping("/{cartId}")
-  public ResponseEntity<AddProductResponse> addProducts(@PathVariable("cartId") String cartId, @RequestBody AddProductRequest addProductRequest) {
+  @PostMapping
+  public ResponseEntity<AddProductResponse> addProducts(@RequestBody AddProductRequest addProductRequest) {
     validator.validateNotNull(addProductRequest.getProductIds(), new BadRequestException("Invalid products"));
-    validator.validateNotBlank(cartId, new BadRequestException("Invalid cart"));
 
-    return ResponseEntity.ok(new AddProductResponse(cartOperations.addProduct(cartId, addProductRequest.getProductIds())));
+    final Cart cart;
+    if (addProductRequest.getCartId().isPresent()) {
+      final String cartId = addProductRequest.getCartId().get();
+      validator.validateNotBlank(cartId, new BadRequestException("Invalid cart"));
+      cart = cartOperations.addProduct(cartId, addProductRequest.getProductIds());
+    } else
+      cart = cartOperations.addProduct(addProductRequest.getProductIds());
+
+    return ResponseEntity.ok(new AddProductResponse(cart));
   }
 }
