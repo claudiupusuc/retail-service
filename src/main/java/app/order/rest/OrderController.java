@@ -38,9 +38,6 @@ public class OrderController {
     return ResponseEntity.ok(new PlaceOrderResponse(order.getOrderId()));
   }
 
-  // This is a management endpoint (Ideally, we would have defined access to endpoints by user roles)
-  // So here, only a user with an "ADMIN" role for example, could access this endpoint else a 403 Forbidden error would be returned.
-  // In the interest of time I left this part out and focused on the requirements of the assessment. I may come back to it later if I do have more time or else we can chat about it in the interview.
   @GetMapping("/{orderNumber}")
   public ResponseEntity<OrderResponse> searchOrder(@PathVariable("orderNumber") String orderNumber) {
     // Here we could also return an OK response and signal inside the response that the order was not found.

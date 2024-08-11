@@ -14,10 +14,8 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
   Optional<Order> findByOrderId(String orderId);
 
-//  @Query("value = {'date': {$gte : ?0, $lte: ?1}}")
-//  List<Order> listOrders(LocalDate start, LocalDate end);
-
-  List<Order> findByDateBetween(LocalDate start, LocalDate end);
+  @Query("{'date': {$gte : ?0, $lt: ?1}}")
+  List<Order> listOrders(LocalDate start, LocalDate end);
 
   Optional<Order> findByCartId(String cartId);
 }

@@ -2,9 +2,11 @@ package app.order;
 
 import app.order.dao.CustomerDetails;
 import app.order.dao.Order;
+import app.products.dao.Product;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface OrderOperations {

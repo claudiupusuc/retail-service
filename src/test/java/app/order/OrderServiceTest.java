@@ -101,6 +101,6 @@ public class OrderServiceTest extends UnitTest {
     orderService.listOrders(yesterday, today);
 
     // then
-    verify(orderRepositoryMock).findByDateBetween(yesterday, today);
+    verify(orderRepositoryMock).listOrders(yesterday, today);
   }
 }

@@ -32,4 +32,9 @@ public class ProductService implements ProductOperations {
   public void save(Product product) {
     productRepository.save(product);
   }
+
+  @Override
+  public List<Product> listProducts() {
+    return productRepository.findAll();
+  }
 }

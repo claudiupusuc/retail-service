@@ -26,4 +26,10 @@ public interface ProductOperations {
    * @param product Product to save.
    */
   void save(Product product);
+
+  /**
+   * List products
+   * @return List of products.
+   */
+  List<Product> listProducts();
 }
