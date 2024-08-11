@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
@@ -87,5 +88,19 @@ public class OrderServiceTest extends UnitTest {
 
     // then
     verify(orderRepositoryMock).findByOrderId(orderNumber);
+  }
+
+  @Test
+  @DisplayName("Should list orders between dates")
+  public void listOrders() {
+    // given
+    LocalDate yesterday = LocalDate.now().minusDays(1);
+    LocalDate today = LocalDate.now();
+
+    // when
+    orderService.listOrders(yesterday, today);
+
+    // then
+    verify(orderRepositoryMock).findByDateBetween(yesterday, today);
   }
 }
