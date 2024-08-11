@@ -18,18 +18,6 @@ gradle build
 
 **`In order to be able to see the order confirmation email be sent, you also need to update the sendgrid key and fromEmail inside the application properties file.`
 
-### Features
-* Persistence of products in a database.
-* Searching for products.
-* Creating a cart of products and adding to that cart.
-* Placing an order with the products from a cart taking into consideration the product availability.
-* Notify the user who placed the order via email with his order number.
-* Ability to search for a placed order by the order number.
-* Reporting API:
-  * Top 5 best selling products today
-  * Least sold products this month (Specify how many).
-  * A day by day breakdown of the sale amount (between two dates).
-
 ### Architecture
 The project is structured so that most packages inside the root `app` package are features.
 Each package has an interface with the operations it exposes to any caller outside. This interfaces is named `operations`.
@@ -44,6 +32,27 @@ Other inner packages:
 
 The project defines custom Exceptions (a few basic ones, more specific ones can also be defined) and uses a controller advice in order to build custom error responses.
 These custom error responses define codes which client apps can use.
+
+### Exposed Endpoints
+* `GET /products` Searches for products by product name
+* `POST /carts` Add a product to cart
+* `POST /orders` Place order
+* `GET /orders/{orderNumber}` Search order
+* `GET /reports//top-5-today` Top 5 products sold today
+* `GET /reports/least-selling-products-month` Least sold products this month
+* `GET /reports/sale-amount-per-day` A day by day breakdown of sale amounts between two dates
+
+### Features
+* Persistence of products in a database.
+* Searching for products.
+* Creating a cart of products and adding to that cart.
+* Placing an order with the products from a cart taking into consideration the product availability.
+* Notify the user who placed the order via email with his order number.
+* Ability to search for a placed order by the order number.
+* Reporting API:
+  * Top 5 best selling products today
+  * Least sold products this month (Specify how many).
+  * A day by day breakdown of the sale amount (between two dates).
 
 ### What is missing and would be added given extra time?
 * Authentication/Authorization logic. Ability to have users of the app with different Roles (CUSTOMER, ADMIN). And being able to define access level for endpoints based on these roles.
