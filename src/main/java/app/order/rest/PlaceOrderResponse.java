@@ -3,12 +3,12 @@ package app.order.rest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CreateOrderResponse {
+public class PlaceOrderResponse {
 
   private final String orderNumber;
 
   @JsonCreator
-  public CreateOrderResponse(@JsonProperty("orderNumber") String orderNumber) {
+  public PlaceOrderResponse(@JsonProperty("orderNumber") String orderNumber) {
     this.orderNumber = orderNumber;
   }
 

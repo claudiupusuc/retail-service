@@ -30,14 +30,14 @@ public class OrderController {
   }
 
   @PostMapping
-  public ResponseEntity<CreateOrderResponse> placeOrder(@RequestBody PlaceOrderRequest placeOrderRequest) {
+  public ResponseEntity<PlaceOrderResponse> placeOrder(@RequestBody PlaceOrderRequest placeOrderRequest) {
     validatePlaceOrderRequest(placeOrderRequest);
 
     final CustomerDetails customerDetails = new CustomerDetails(placeOrderRequest.getName(), placeOrderRequest.getNumber(), placeOrderRequest.getEmail());
     final Order order = orderOperations.placeOrder(placeOrderRequest.getCartId(), customerDetails);
     logger.info("Order placed. Order number: {}", order.getOrderId());
 
-    return ResponseEntity.ok(new CreateOrderResponse(order.getOrderId()));
+    return ResponseEntity.ok(new PlaceOrderResponse(order.getOrderId()));
   }
 
   private void validatePlaceOrderRequest(PlaceOrderRequest placeOrderRequest) {
