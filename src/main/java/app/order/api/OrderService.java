@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,15 +42,20 @@ public class OrderService implements OrderOperations {
     return orderRepository.save(newOrder);
   }
 
-  /*
-    Ideally, with more time to code and test, this would be a message pushed to a queue for example.
-    That way we get a few benefits:
-    1. Sending the email is less coupled to the order flow
-    2. If something goes wrong with the email sending, we could have retry mechanism with re-queue.
-    3. In large volumes or orders posted at once, the email sending could be something we can do with a little latency. And so we can define how we consume from the queue.
+  @Override
+  public Optional<Order> searchOrder(String orderNumber) {
+    return orderRepository.findByOrderId(orderNumber);
+  }
 
-    But for this assignment, I will make the call to send an email here instead of using a queue.
-     */
+  /*
+      Ideally, with more time to code and test, this would be a message pushed to a queue for example.
+      That way we get a few benefits:
+      1. Sending the email is less coupled to the order flow
+      2. If something goes wrong with the email sending, we could have retry mechanism with re-queue.
+      3. In large volumes or orders posted at once, the email sending could be something we can do with a little latency. And so we can define how we consume from the queue.
+
+      But for this assignment, I will make the call to send an email here instead of using a queue.
+       */
   private void sendOrderConfirmationEmail(Order order) {
     new Thread(() -> mailOperations.sendOrderPlacedEmail(order.getEmail(), order.getOrderId())).start();
   }

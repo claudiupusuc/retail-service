@@ -1,6 +1,7 @@
 package app.order.rest;
 
 import app.exception.ex.BadRequestException;
+import app.exception.ex.NotFoundException;
 import app.order.OrderOperations;
 import app.order.dao.CustomerDetails;
 import app.order.dao.Order;
@@ -9,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -38,6 +36,15 @@ public class OrderController {
     logger.info("Order placed. Order number: {}", order.getOrderId());
 
     return ResponseEntity.ok(new PlaceOrderResponse(order.getOrderId()));
+  }
+
+  @GetMapping("/{orderNumber}")
+  public ResponseEntity<OrderResponse> searchOrder(@PathVariable("orderNumber") String orderNumber) {
+    // Here we could also return an OK response and signal inside the response that the order was not found.
+    // But since a call to this endpoint should contain a valid order id, then it makes sense to return the 404 Not Found.
+    final Order order = orderOperations.searchOrder(orderNumber).orElseThrow(() -> new NotFoundException("Order not found"));
+
+    return ResponseEntity.ok(new OrderResponse(order.getOrderId(), order.getCartId(), order.getCustomerName(), order.getMobileNumber(), order.getEmail(), order.getDate()));
   }
 
   private void validatePlaceOrderRequest(PlaceOrderRequest placeOrderRequest) {

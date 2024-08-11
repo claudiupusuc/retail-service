@@ -75,4 +75,17 @@ public class OrderServiceTest extends UnitTest {
     verifyNoInteractions(orderRepositoryMock);
     verifyNoInteractions(mailOperationsMock);
   }
+
+  @Test
+  @DisplayName("Should get order by order number")
+  public void getOrder() {
+    // given
+    String orderNumber = "order-number";
+
+    // when
+    orderService.searchOrder(orderNumber);
+
+    // then
+    verify(orderRepositoryMock).findByOrderId(orderNumber);
+  }
 }

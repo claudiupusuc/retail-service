@@ -13,6 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,5 +58,19 @@ public class OrderControllerTest extends UnitTest {
 
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getOrderNumber()).isEqualTo("order-number-123");
+  }
+
+  @Test
+  @DisplayName("Should search for order by order number")
+  public void searchOrder() {
+    // given
+    String orderNumber = "order-number";
+    when(orderOperationsMock.searchOrder(orderNumber)).thenReturn(Optional.of(new Order("1", "123", "4324", "Ion", "012345", "ion@mail.com", LocalDate.now())));
+
+    // when
+    orderController.searchOrder(orderNumber);
+
+    // then
+    verify(orderOperationsMock).searchOrder(orderNumber);
   }
 }
