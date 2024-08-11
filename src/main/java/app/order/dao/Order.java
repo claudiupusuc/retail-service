@@ -14,6 +14,7 @@ public class Order {
   private final String id;
   @Indexed
   private final String orderId;
+  @Indexed(unique = true)
   private final String cartId;
   private final String customerName;
   private final String mobileNumber;

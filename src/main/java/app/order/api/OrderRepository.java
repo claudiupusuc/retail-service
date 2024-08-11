@@ -18,4 +18,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 //  List<Order> listOrders(LocalDate start, LocalDate end);
 
   List<Order> findByDateBetween(LocalDate start, LocalDate end);
+
+  Optional<Order> findByCartId(String cartId);
 }

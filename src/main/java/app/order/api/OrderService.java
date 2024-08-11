@@ -2,17 +2,18 @@ package app.order.api;
 
 import app.cart.CartOperations;
 import app.cart.dao.Cart;
+import app.exception.ex.BadRequestException;
 import app.exception.ex.NotFoundException;
 import app.notifications.mail.MailOperations;
 import app.order.OrderOperations;
 import app.order.dao.CustomerDetails;
 import app.order.dao.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +25,8 @@ public class OrderService implements OrderOperations {
   private final CartOperations cartOperations;
   private final MailOperations mailOperations;
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
   @Autowired
   public OrderService(OrderRepository orderRepository, CartOperations cartOperations, MailOperations mailOperations) {
     this.orderRepository = orderRepository;
@@ -34,6 +37,11 @@ public class OrderService implements OrderOperations {
   @Override
   public Order placeOrder(String cartId, CustomerDetails customerDetails) {
     final Cart cart = cartOperations.getCart(cartId).orElseThrow(() -> new NotFoundException("Cart not found"));
+
+    if (orderRepository.findByCartId(cartId).isPresent()) {
+      logger.warn("Attempt to create a duplicate order for the same cart. Cart id: {}", cartId);
+      throw new BadRequestException("Order already created from this cart");
+    }
 
     final String newOrderId = UUID.randomUUID().toString().replace("-", "");
     final Order newOrder = new Order(null, newOrderId, cart.getId(), customerDetails.getName(), customerDetails.getPhoneNumber(), customerDetails.getEmail(), LocalDate.now());
