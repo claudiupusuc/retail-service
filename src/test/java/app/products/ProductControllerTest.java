@@ -25,7 +25,7 @@ public class ProductControllerTest extends UnitTest {
   @DisplayName("Should search products when the product name is present on the request")
   public void searchProducts(String productName) {
     // given
-    when(productServiceMock.searchProducts(productName)).thenReturn(List.of(new Product("1", "Rice", 5.50)));
+    when(productServiceMock.searchProducts(productName)).thenReturn(List.of(new Product("1", "Rice", 5.50, 10)));
     doNothing().when(validatorMock).validateNotBlank(eq(productName), any(RuntimeException.class));
 
     // when

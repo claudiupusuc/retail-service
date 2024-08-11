@@ -27,4 +27,9 @@ public class ProductService implements ProductOperations {
   public Optional<Product> getProduct(String productId) {
     return productRepository.findById(productId);
   }
+
+  @Override
+  public void save(Product product) {
+    productRepository.save(product);
+  }
 }

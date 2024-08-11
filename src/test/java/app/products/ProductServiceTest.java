@@ -22,8 +22,8 @@ public class ProductServiceTest extends UnitTest {
   public void searchProducts() {
     // given
     String productName = "Rice";
-    Product jasmineRice = new Product("1", "Jasmine Rice", 5.50);
-    Product roundRice = new Product("1", "Round Rice", 5.50);
+    Product jasmineRice = new Product("1", "Jasmine Rice", 5.50, 1);
+    Product roundRice = new Product("1", "Round Rice", 5.50, 1);
 
     when(productRepositoryMock.searchProducts(productName)).thenReturn(List.of(jasmineRice, roundRice));
 
@@ -47,5 +47,18 @@ public class ProductServiceTest extends UnitTest {
 
     // then
     verify(productRepositoryMock).findById(productId);
+  }
+
+  @Test
+  @DisplayName("Should save product")
+  public void save() {
+    // given
+    Product product = new Product("1", "Rice", 5.50, 20);
+
+    // when
+    productService.save(product);
+
+    // then
+    verify(productRepositoryMock).save(product);
   }
 }

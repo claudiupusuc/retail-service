@@ -2,8 +2,10 @@ package app.cart.api;
 
 import app.cart.CartOperations;
 import app.cart.dao.Cart;
+import app.exception.ex.BadRequestException;
 import app.exception.ex.NotFoundException;
 import app.products.ProductOperations;
+import app.products.dao.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +44,13 @@ public class CartService implements CartOperations {
 
   private Cart addProductsAndSaveCart(Cart cart, List<String> productIds) {
     productIds.forEach(productId -> {
-      productOperations.getProduct(productId).orElseThrow(() -> new NotFoundException("Invalid product"));
+      final Product product = productOperations.getProduct(productId).orElseThrow(() -> new NotFoundException("Invalid product"));
+      if (product.getAvailableQuantity() < 1)
+        throw new BadRequestException("Product Unavailable");
+
+      product.sell();
+      productOperations.save(product);
+
       cart.addProduct(productId);
     });
 

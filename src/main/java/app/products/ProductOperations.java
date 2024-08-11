@@ -15,9 +15,15 @@ public interface ProductOperations {
   List<Product> searchProducts(String productName);
 
   /**
-   * Retrieve a product by it's id.
+   * Retrieve a product by its id.
    * @param productId The id of the product
    * @return The product or Optional empty if not found.
    */
   Optional<Product> getProduct(String productId);
+
+  /**
+   * Save the product.
+   * @param product Product to save.
+   */
+  void save(Product product);
 }

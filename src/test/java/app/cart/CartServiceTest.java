@@ -4,6 +4,7 @@ import app.UnitTest;
 import app.cart.api.CartRepository;
 import app.cart.api.CartService;
 import app.cart.dao.Cart;
+import app.exception.ex.BadRequestException;
 import app.exception.ex.NotFoundException;
 import app.products.ProductOperations;
 import app.products.dao.Product;
@@ -36,8 +37,8 @@ public class CartServiceTest extends UnitTest {
     Cart existingCart = new Cart(cartId, productQuantityMap);
 
     when(cartRepositoryMock.findById(cartId)).thenReturn(Optional.of(existingCart));
-    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50)));
-    when(productOperationsMock.getProduct("product3")).thenReturn(Optional.of(new Product("product3", "Sample product 3", 5.50)));
+    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50, 10)));
+    when(productOperationsMock.getProduct("product3")).thenReturn(Optional.of(new Product("product3", "Sample product 3", 5.50, 10)));
 
     // when
     cartService.addProduct(cartId, productIds);
@@ -47,6 +48,8 @@ public class CartServiceTest extends UnitTest {
     verify(productOperationsMock).getProduct("product2");
     verify(productOperationsMock).getProduct("product3");
     verify(cartRepositoryMock).save(existingCart);
+
+    verify(productOperationsMock, times(2)).save(any(Product.class));
   }
 
   @Test
@@ -56,8 +59,8 @@ public class CartServiceTest extends UnitTest {
     List<String> productIds = List.of("product2", "product3");
     Cart savedCart = new Cart("cart-id", Map.of("product2", 1, "product 3", 1));
 
-    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50)));
-    when(productOperationsMock.getProduct("product3")).thenReturn(Optional.of(new Product("product3", "Sample product 3", 5.50)));
+    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50, 10)));
+    when(productOperationsMock.getProduct("product3")).thenReturn(Optional.of(new Product("product3", "Sample product 3", 5.50, 10)));
     when(cartRepositoryMock.save(any(Cart.class))).thenReturn(savedCart);
 
     // when
@@ -69,6 +72,8 @@ public class CartServiceTest extends UnitTest {
     verify(productOperationsMock).getProduct("product2");
     verify(productOperationsMock).getProduct("product3");
     verify(cartRepositoryMock).save(any(Cart.class));
+
+    verify(productOperationsMock, times(2)).save(any(Product.class));
   }
 
   @Test
@@ -90,7 +95,7 @@ public class CartServiceTest extends UnitTest {
     Cart existingCart = new Cart(cartId, productQuantityMap);
 
     when(cartRepositoryMock.findById(cartId)).thenReturn(Optional.of(existingCart));
-    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50)));
+    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50, 10)));
     when(productOperationsMock.getProduct("product3")).thenReturn(Optional.empty());
 
     // when - then
@@ -108,5 +113,24 @@ public class CartServiceTest extends UnitTest {
 
     // then
     verify(cartRepositoryMock).findById(cartId);
+  }
+
+  @Test
+  @DisplayName("Should not add product to cart when the available quantity for the product is below 1")
+  public void addProductToCartNoAvailableQuantity() {
+    // given
+    String cartId = "cart-id";
+    List<String> productIds = List.of("product2", "product3");
+    Map<String, Integer> productQuantityMap = new HashMap<>();
+    Cart existingCart = new Cart(cartId, productQuantityMap);
+
+    when(cartRepositoryMock.findById(cartId)).thenReturn(Optional.of(existingCart));
+    when(productOperationsMock.getProduct("product2")).thenReturn(Optional.of(new Product("product2", "Sample product 2", 3.50, 0)));
+    when(productOperationsMock.getProduct("product3")).thenReturn(Optional.of(new Product("product3", "Sample product 3", 5.50, 10)));
+
+    // when - then
+    assertThrows(BadRequestException.class, () -> cartService.addProduct(cartId, productIds));
+    verify(cartRepositoryMock).findById(cartId);
+    verifyNoMoreInteractions(cartRepositoryMock);
   }
 }
