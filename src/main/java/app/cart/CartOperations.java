@@ -3,6 +3,7 @@ package app.cart;
 import app.cart.dao.Cart;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartOperations {
 
@@ -20,4 +21,11 @@ public interface CartOperations {
    * @return The updated cart.
    */
   Cart addProduct(List<String> productIds);
+
+  /**
+   * Get cart by cart id.
+   * @param cartId The id of the cart
+   * @return The Cart or empty if not found.
+   */
+  Optional<Cart> getCart(String cartId);
 }

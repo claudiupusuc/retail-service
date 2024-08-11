@@ -10,3 +10,7 @@ spring:
       auto-index-creation: true
   jackson:
     default-property-inclusion: NON_NULL
+app:
+  mail:
+    key: "THE_KEY_TO_YOUR_THIRD_PARTY_EMAIL_PROVIDER_SENDGRID"
+    from-email: "retail-app@retail.com"

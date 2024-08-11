@@ -96,4 +96,17 @@ public class CartServiceTest extends UnitTest {
     // when - then
     assertThrows(NotFoundException.class, () -> cartService.addProduct(cartId, productIds));
   }
+
+  @Test
+  @DisplayName("Should get cart by cart id")
+  public void getCart() {
+    // given
+    String cartId = "cart-id";
+
+    // when
+    cartService.getCart(cartId);
+
+    // then
+    verify(cartRepositoryMock).findById(cartId);
+  }
 }

@@ -32,4 +32,15 @@ public class ValidatorTest extends UnitTest {
     // when - then
     assertThrows(exception.getClass(), () -> validator.validateNotBlank(value, exception));
   }
+
+  @ParameterizedTest
+  @DisplayName("Should throw exception for invalid email")
+  @ValueSource(strings = {"john", "john@", "@mail.com"})
+  public void validateEmail(String email) {
+    // given
+    RuntimeException exception = new RuntimeException();
+
+    // when - then
+    assertThrows(exception.getClass(), () -> validator.validateEmail(email, exception));
+  }
 }

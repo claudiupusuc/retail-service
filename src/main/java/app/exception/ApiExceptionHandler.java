@@ -28,6 +28,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return buildErrorResponse(new NotFoundException(Optional.ofNullable(exception.getMessage()).orElse("Not Found"), Error.NOT_FOUND), HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(InternalServerException.class)
+  ResponseEntity<ErrorResponse> handleInternalServerException(InternalServerException exception) {
+    return buildErrorResponse(new InternalServerException(Optional.ofNullable(exception.getMessage()).orElse("Internal Server Error"), Error.INTERNAL_ERVER_ERROR), HttpStatus.NOT_FOUND);
+  }
+
   private ResponseEntity<ErrorResponse> buildErrorResponse(AppException exception, HttpStatus httpStatus) {
     logger.info("Returning an error response. Message: {}, Reason: {}", exception.getMessage(), exception.getError().name());
     return new ResponseEntity<>(buildError(exception), httpStatus);

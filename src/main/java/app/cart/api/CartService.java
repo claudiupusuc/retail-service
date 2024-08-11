@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService implements CartOperations {
@@ -32,6 +33,11 @@ public class CartService implements CartOperations {
   public Cart addProduct(List<String> productIds) {
     final Cart cart = new Cart(null, new HashMap<>());
     return addProductsAndSaveCart(cart, productIds);
+  }
+
+  @Override
+  public Optional<Cart> getCart(String cartId) {
+    return cartRepository.findById(cartId);
   }
 
   private Cart addProductsAndSaveCart(Cart cart, List<String> productIds) {
