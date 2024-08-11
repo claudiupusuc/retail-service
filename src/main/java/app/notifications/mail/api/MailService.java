@@ -13,11 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+@Service
 public class MailService implements MailOperations {
 
   private final MailProperties mailProperties;
