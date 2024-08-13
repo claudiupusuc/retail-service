@@ -88,7 +88,7 @@ public class ReportingService implements ReportingOperations {
     return salesPerDay;
   }
 
-  public Double saleAmountPerDay(LocalDate day) {
+  private Double saleAmountPerDay(LocalDate day) {
     final List<Order> orders = orderOperations.listOrders(day, day.plusDays(1));
     final List<String> cartIds = orders.stream().map(Order::getCartId).toList();
 
